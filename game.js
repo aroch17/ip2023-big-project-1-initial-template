@@ -11,6 +11,21 @@ const SETTINGS = {
     paddleSound: '/Sounds/Paddle.wav',
     wallSound: '/Sounds/Wall.wav',
     scoreSound: '/Sounds/Score.wav',
+
+    courtColour: "black",
+    wallColour: "white",
+    wallSize: 20,
+    courtMarginX: 12,
+    courtMarginY: 4,
+
+    width: innerWidth,
+    height: innerHeight,
+
+    paddleColour: "white",
+    paddleWidth: 12,
+    paddleHeight: 48,
+
+    FPS: 60,
 }
 
 const PLAYERS = {
@@ -19,7 +34,30 @@ const PLAYERS = {
 }
 
 class Game {
-    
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.court = new Court(canvas)
+    }
+
+    start() {
+        let that = this
+        let previousTime = Date.now();
+        let now;
+        let dT;
+        setInterval( function() {
+            now = Date.now();
+            dT = (now - previousTime)/1000;
+            //update
+            that.draw()
+            previousTime = Date.now();
+        }, (1/SETTINGS.FPS*1000))
+    }
+
+    draw() {
+        let ctx = canvas.getContext('2d')
+        ctx.clearRect(0, 0, SETTINGS.width, SETTINGS.height);
+        this.court.draw()
+    }
 }
 
 class ScoreBoard {
@@ -39,6 +77,25 @@ class AIController {
 }
 
 class Court {
+    constructor(canvas) {
+        this.canvas = canvas;
+    }
+
+    draw() {
+        let ctx = canvas.getContext('2d')
+        // drawing top and bottom borders
+        ctx.fillStyle = SETTINGS.wallColour;
+        ctx.fillRect(0, 0, SETTINGS.width, SETTINGS.wallSize)
+        ctx.fillRect(0, (SETTINGS.height-SETTINGS.wallSize), SETTINGS.width, SETTINGS.wallSize)
+
+        // drawing the dashed line
+        ctx.strokeStyle = SETTINGS.wallColour;
+        ctx.setLineDash([40]);
+        ctx.beginPath();
+        ctx.moveTo(SETTINGS.width/2, 0);
+        ctx.lineTo(SETTINGS.width/2, SETTINGS.height);
+        ctx.stroke();
+    }
     
 }
 
@@ -77,3 +134,4 @@ const canvas = document.getElementById("game")
 canvas.width = SETTINGS.width;
 canvas.height = SETTINGS.height;
 let game = new Game(canvas)
+game.start()

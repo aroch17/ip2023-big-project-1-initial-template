@@ -13,6 +13,7 @@ body {
   
 canvas {
     margin-top: 25px;
+    margin-bottom: 25px;
     z-index: 10;
     cursor: crosshair;
 }
@@ -31,7 +32,6 @@ canvas {
       height: 700px;
       margin-top: 50px;
     }
-  
 }
 
 
