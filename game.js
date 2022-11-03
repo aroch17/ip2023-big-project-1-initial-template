@@ -65,6 +65,20 @@ class ScoreBoard {
 }
 
 class Paddle {
+    constructor(x, y, player_number, court) {
+        this.x = x 
+        this.y = y
+        this.player_number = player_number
+        this.width = SETTINGS.paddleWidth
+        this.height = SETTINGS.paddleHeight
+        this.court = court
+    }
+
+    draw(canvas) {
+        let ctx = canvas.getContext('2d')
+        ctx.fillStyle = SETTINGS.paddleColour;
+        ctx.fillRect(this.x, this.y, this.width, this.height)
+    }
     
 }
 
@@ -79,6 +93,9 @@ class AIController {
 class Court {
     constructor(canvas) {
         this.canvas = canvas;
+        this.paddleOne = new Paddle(0, SETTINGS.height/2, PLAYERS.playerOne, this)
+        this.paddleTwo = new Paddle(SETTINGS.width-25, SETTINGS.height/2, PLAYERS.playerTwo, this)
+        this.ball = new Ball(SETTINGS.width/2, SETTINGS.height/2, 10, this)
     }
 
     draw() {
@@ -95,11 +112,36 @@ class Court {
         ctx.moveTo(SETTINGS.width/2, 0);
         ctx.lineTo(SETTINGS.width/2, SETTINGS.height);
         ctx.stroke();
+
+        this.paddleOne.draw(canvas)
+        this.paddleTwo.draw(canvas)
+
+        this.ball.draw(canvas)
     }
     
 }
 
 class Ball {
+    constructor(x, y, radius, court) {
+        this.x = x
+        this.y = y
+        this.radius = radius
+        this.court = court
+        this.velocity = {x:-100, y:100}
+        this.acceleration = 2
+    } 
+
+    draw(canvas) {
+        let ctx = canvas.getContext('2d')
+        ctx.fillStyle = SETTINGS.wallColour;
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, this.radius, 0, 2*Math.PI)
+        ctx.fill()
+    }
+
+    update(dT) {
+        //todo
+    }
     
 }
 
